@@ -11,9 +11,10 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using SimpleJSON;
 using UnityEngine;
+
 public class Multiplayer
 {
-	public void Initialize()
+	public Multiplayer()
 	{
 		this.PlayerMarkers = new Dictionary<string, int>();
 		this.PlayersBeingRendered = new List<string>();
@@ -25,10 +26,12 @@ public class Multiplayer
 		this.ToDespawn = new List<GameObject>();
 		this.RenderedPrefabs = new Dictionary<string, Multiplayer.Pair<Mission.MsObj, GameObject>>();
 	}
+
 	public string Vector3ToString(Vector3 inputVar)
 	{
 		return string.Format("{0},{1},{2}", inputVar.x, inputVar.y, inputVar.z);
 	}
+
 	public void ConnectToServer(string ServerIP, int ServerPort, MissionsManager missionsManager)
 	{
 		this.bracketBuffer = new Dictionary<double, JSONNode>();
@@ -109,12 +112,10 @@ public class Multiplayer
 						missionsManager.displayConnectionBox = true;
 						missionsManager.connectionBoxContent = string.Concat(new object[]
 						{
-							"Connecting to server:
-",
+							"Connecting to server:\n",
 							ServerIP,
 							ServerPort,
-							"
-Please wait..."
+							"\nPlease wait..."
 						});
 						int num = new System.Random().Next(1000, 9999);
 						this.MyUsername = "Guest" + num;
@@ -131,20 +132,20 @@ Please wait..."
 						}
 						string s2 = string.Concat(new string[]
 						{
-							"{"NCVersion":3,"NCClient":true,"Username":"",
+							"{\"NCVersion\":3,\"NCClient\":true,\"Username\":\"",
 							this.MyUsername,
-							"","PlaneType":"",
+							"\",\"PlaneType\":\"",
 							this.planeType,
-							""}"
+							"\"}\u001c"
 						});
 						int num2 = Encoding.UTF8.GetBytes(s2).Length;
 						string s3 = string.Concat(new string[]
 						{
-							"{"NCVersion":3,"NCClient":true,"Username":"",
+							"{\"NCVersion\":3,\"NCClient\":true,\"Username\":\"",
 							this.MyUsername,
-							"","PlaneType":"",
+							"\",\"PlaneType\":\"",
 							this.planeType,
-							""}"
+							"\"}\u001c"
 						});
 						byte[] bytes = Encoding.UTF8.GetBytes(s3);
 						this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -167,14 +168,14 @@ Please wait..."
 							this.BytesInOverTehInterwebz += num3;
 							stringBuilder2.Append(Encoding.UTF8.GetString(array3, 0, num3));
 						}
-						while (!stringBuilder2.ToString().Contains(""));
+						while (!stringBuilder2.ToString().Contains("\u001c"));
 						UnityEngine.Debug.Log("recv'ed");
 						int num4 = 0;
 						int num5 = 0;
-						while ((num5 = stringBuilder2.ToString().IndexOf("", num5)) != -1)
+						while ((num5 = stringBuilder2.ToString().IndexOf("\u001c", num5)) != -1)
 						{
 							num4++;
-							num5 += "".Length;
+							num5 += "\u001c".Length;
 						}
 						if (num4 == 0)
 						{
@@ -185,7 +186,7 @@ Please wait..."
 						{
 							string[] array4 = stringBuilder2.ToString().Split(new char[]
 							{
-								''
+								'\u001c'
 							});
 							string text = array4[0];
 							if (this.underreportedPacket != null)
@@ -202,7 +203,7 @@ Please wait..."
 							if (text.Contains("!!VoscriptPluginData"))
 							{
 								UnityEngine.Debug.Log("detected voscript data in bracket");
-								JSONNode jsonnode = JSON.Parse(text.Replace("", ""));
+								JSONNode jsonnode = JSON.Parse(text.Replace("\u001c", ""));
 								if (!jsonnode.HasKey("!!VoscriptPluginData"))
 								{
 									UnityEngine.Debug.Log("undetected voscript data in bracket! wtf?");
@@ -231,26 +232,19 @@ Please wait..."
 				catch (Exception ex)
 				{
 					missionsManager.displayConnectionBox = true;
-					UnityEngine.Debug.Log("Recv connection lost. Reconnecting... Cause: " + ex.Message + "
-stack trace:
-" + ex.StackTrace);
-					this.LastError = "Recv connection lost. Reconnecting... Cause: " + ex.Message + "
-stack trace:
-" + ex.StackTrace;
+					UnityEngine.Debug.Log("Recv connection lost. Reconnecting... Cause: " + ex.Message + "\nstack trace:\n" + ex.StackTrace);
+					this.LastError = "Recv connection lost. Reconnecting... Cause: " + ex.Message + "\nstack trace:\n" + ex.StackTrace;
 					for (int j = 3; j <= 0; j--)
 					{
 						missionsManager.displayConnectionBox = true;
 						missionsManager.connectionBoxContent = string.Concat(new object[]
 						{
-							"Lost connection to server:
-",
+							"Lost connection to server:\n",
 							ServerIP,
 							ServerPort,
-							"
-Reconnecting automatically in ",
+							"\nReconnecting automatically in ",
 							j,
-							" seconds...
-If this error keeps appearing, please check your Internet connection or try changing your username."
+							" seconds...\n\nIf this error keeps appearing, please check your Internet connection or try changing your username."
 						});
 						Thread.Sleep(1000);
 					}
@@ -299,9 +293,7 @@ If this error keeps appearing, please check your Internet connection or try chan
 							}
 							catch (Exception ex)
 							{
-								UnityEngine.Debug.Log("failed to determine where person is seating: " + ex.Message + "
-stack trace:
-" + ex.StackTrace);
+								UnityEngine.Debug.Log("failed to determine where person is seating: " + ex.Message + "\nstack trace:\n" + ex.StackTrace);
 							}
 						}
 						try
@@ -369,14 +361,10 @@ stack trace:
 						}
 						catch (Exception ex3)
 						{
-							UnityEngine.Debug.Log("failed to get state: " + ex3.Message + "
-stack trace:
-" + ex3.StackTrace);
-							this.LastError = "failed to get state: " + ex3.Message + "
-stack trace:
-" + ex3.StackTrace;
+							UnityEngine.Debug.Log("failed to get state: " + ex3.Message + "\nstack trace:\n" + ex3.StackTrace);
+							this.LastError = "failed to get state: " + ex3.Message + "\nstack trace:\n" + ex3.StackTrace;
 						}
-						string format = "{{"PositionService":{{"Position":"{0}","PlaneType":"{1}", "Rotation":"{2}", "State":{3}{4}}}, "ChatService":{{"Pending":"{5}"}}}}";
+						string format = "{{\"PositionService\":{{\"Position\":\"{0}\",\"PlaneType\":\"{1}\", \"Rotation\":\"{2}\", \"State\":{3}{4}}}, \"ChatService\":{{\"Pending\":\"{5}\"}}}}\u001c";
 						string text = "";
 						string text2 = string.Format(format, new object[]
 						{
@@ -400,12 +388,8 @@ stack trace:
 				}
 				catch (Exception ex4)
 				{
-					UnityEngine.Debug.Log("Send connection lost. Reconnecting... Cause: " + ex4.Message + "
-stack trace:
-" + ex4.StackTrace);
-					this.LastError = "Send connection lost. Reconnecting... Cause: " + ex4.Message + "
-stack trace:
-" + ex4.StackTrace;
+					UnityEngine.Debug.Log("Send connection lost. Reconnecting... Cause: " + ex4.Message + "\nstack trace:\n" + ex4.StackTrace);
+					this.LastError = "Send connection lost. Reconnecting... Cause: " + ex4.Message + "\nstack trace:\n" + ex4.StackTrace;
 				}
 			}
 		};
@@ -413,10 +397,9 @@ stack trace:
 		{
 			try
 			{
-				string[] array3 = e.UserState.ToString().Replace("", "").Split(new string[]
+				string[] array3 = e.UserState.ToString().Replace("\u001c", "").Split(new string[]
 				{
-					"
-"
+					"\n\n"
 				}, StringSplitOptions.None);
 				string text = array3[array3.Length - 1];
 				UnityEngine.Debug.Log(text);
@@ -424,10 +407,8 @@ stack trace:
 			}
 			catch (Exception ex)
 			{
-				UnityEngine.Debug.Log("Failed to process incoming server bracket: " + ex.Message + "
-stack trace: " + ex.StackTrace);
-				this.LastError = "Failed to process incoming server bracket: " + ex.Message + "
-stack trace: " + ex.StackTrace;
+				UnityEngine.Debug.Log("Failed to process incoming server bracket: " + ex.Message + "\nstack trace: " + ex.StackTrace);
+				this.LastError = "Failed to process incoming server bracket: " + ex.Message + "\nstack trace: " + ex.StackTrace;
 			}
 		};
 		recvWorker.WorkerReportsProgress = true;
@@ -435,6 +416,7 @@ stack trace: " + ex.StackTrace;
 		UnityEngine.Debug.Log("initialized");
 		this.SendMessageToast("Initialization successful");
 	}
+
 	public Vector3 StringToVector3(string StrInputUnfiltered)
 	{
 		UnityEngine.Debug.Log(StrInputUnfiltered);
@@ -448,6 +430,7 @@ stack trace: " + ex.StackTrace;
 		});
 		return new Vector3(float.Parse(array[0]), float.Parse(array[1]), float.Parse(array[2]));
 	}
+
 	public void HandleNewBracket(JSONNode bracket, MissionsManager thisManager)
 	{
 		double totalSeconds = this.stopwatch.Elapsed.TotalSeconds;
@@ -457,7 +440,7 @@ stack trace: " + ex.StackTrace;
 			this.lastServerChat = Regex.Replace(bracket["ChatService"]["Chat"].ToString().Trim(new char[]
 			{
 				'"'
-			}).Replace("\n", Environment.NewLine), "\[" + string.Join("|", this.playersToBlock.ToArray()) + "\].*?\n", "");
+			}).Replace("\\n", Environment.NewLine), "\\[" + string.Join("|", this.playersToBlock.ToArray()) + "\\].*?\\n", "");
 		}
 		else
 		{
@@ -604,6 +587,7 @@ stack trace: " + ex.StackTrace;
 		double totalSeconds2 = this.stopwatch.Elapsed.TotalSeconds;
 		UnityEngine.Debug.Log("time taken to handle bracket: " + (totalSeconds2 - totalSeconds));
 	}
+
 	public string PrefabNameToTFSMPName(string PrefabName)
 	{
 		if (PrefabName == string.Empty)
@@ -620,6 +604,7 @@ stack trace: " + ex.StackTrace;
 		}
 		return "C-400";
 	}
+
 	public string GetPlaneType(int prefabIdx)
 	{
 		if (prefabIdx <= 27)
@@ -697,6 +682,7 @@ stack trace: " + ex.StackTrace;
 		}
 		return "HC-400";
 	}
+
 	private void TweenGameObject(GameObject gameObject, Vector3 targetPosition, Vector3 targetEulerAngle, float timeToTween)
 	{
 		float num = 0f;
@@ -717,6 +703,7 @@ stack trace: " + ex.StackTrace;
 		gameObject.transform.position = targetPosition;
 		gameObject.transform.eulerAngles = targetEulerAngle;
 	}
+
 	public void CoolTweenGameObject(GameObject gameObject, Vector3 targetPosition, Vector3 targetEulerAngle, float timeToTween)
 	{
 		Vector3 position = gameObject.transform.position;
@@ -729,17 +716,17 @@ stack trace: " + ex.StackTrace;
 		}
 		catch (Exception ex)
 		{
-			UnityEngine.Debug.Log("failed to move plane's rigid: " + ex.Message + "
-stack trace:
-" + ex.StackTrace);
+			UnityEngine.Debug.Log("failed to move plane's rigid: " + ex.Message + "\nstack trace:\n" + ex.StackTrace);
 			gameObject.transform.position = targetPosition;
 			gameObject.transform.eulerAngles = targetEulerAngle;
 		}
 	}
+
 	public void Destroy(GameObject gameObject)
 	{
 		this.ToDespawn.Add(gameObject);
 	}
+
 	public List<object> GetPrefs(string ServerIP, int ServerPort)
 	{
 		List<object> result;
@@ -842,9 +829,7 @@ stack trace:
 		}
 		catch (Exception ex)
 		{
-			UnityEngine.Debug.Log("failed to retrieve playerprefs for tfsmp: 
-" + ex.Message + "
-stack trace: " + ex.StackTrace);
+			UnityEngine.Debug.Log("failed to retrieve playerprefs for tfsmp: \n" + ex.Message + "\nstack trace: " + ex.StackTrace);
 			result = new List<object>
 			{
 				"Guest1337",
@@ -855,6 +840,7 @@ stack trace: " + ex.StackTrace);
 		}
 		return result;
 	}
+
 	private AndroidJavaObject GetExtras(AndroidJavaObject intent)
 	{
 		AndroidJavaObject result = null;
@@ -868,6 +854,7 @@ stack trace: " + ex.StackTrace);
 		}
 		return result;
 	}
+
 	private string GetProperty(AndroidJavaObject extras, string name)
 	{
 		string result = string.Empty;
@@ -884,6 +871,7 @@ stack trace: " + ex.StackTrace);
 		}
 		return result;
 	}
+
 	public string StateToString()
 	{
 		string text = "{";
@@ -892,14 +880,14 @@ stack trace: " + ex.StackTrace);
 			string text2 = "";
 			if (keyValuePair.Value is string)
 			{
-				text2 = """;
+				text2 = "\"";
 			}
 			text = string.Concat(new string[]
 			{
 				text,
-				""",
+				"\"",
 				keyValuePair.Key,
-				"":",
+				"\":",
 				text2,
 				keyValuePair.Value.ToString().ToLower(),
 				text2,
@@ -913,6 +901,7 @@ stack trace: " + ex.StackTrace);
 		});
 		return text + "}";
 	}
+
 	public Dictionary<string, bool> StringToState(string state)
 	{
 		string[] array = state.Split(new string[]
@@ -946,10 +935,12 @@ stack trace: " + ex.StackTrace);
 		}
 		return dictionary;
 	}
+
 	private object getIntentData()
 	{
 		return this.CreatePushClass(new AndroidJavaClass("com.unity3d.player.UnityPlayer"));
 	}
+
 	public object CreatePushClass(AndroidJavaClass UnityPlayer)
 	{
 		AndroidJavaObject intent = UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity").Call<AndroidJavaObject>("getIntent", new object[0]);
@@ -960,6 +951,7 @@ stack trace: " + ex.StackTrace);
 		}
 		return false;
 	}
+
 	public void Update(float dt)
 	{
 		double totalSeconds = this.stopwatch.Elapsed.TotalSeconds;
@@ -1017,13 +1009,11 @@ stack trace: " + ex.StackTrace);
 							"ms, render delay ",
 							num * 1000.0,
 							"ms",
-							"
-Out: ",
+							"\nOut: ",
 							this.NicelyRepresentBytes(this.GetOutSpeed(), 1),
 							"/s, In: ",
 							this.NicelyRepresentBytes(this.GetInSpeed(), 1),
-							"/s
-Total out: ",
+							"/s\nTotal out: ",
 							this.NicelyRepresentBytes(this.BytesOutOverTehInterwebz, 1),
 							", total in: ",
 							this.NicelyRepresentBytes(this.BytesInOverTehInterwebz, 1)
@@ -1053,9 +1043,7 @@ Total out: ",
 							}
 							catch (Exception ex)
 							{
-								UnityEngine.Debug.Log("failed to move player model for reason " + ex.Message + "
-stack trace:
-" + ex.StackTrace);
+								UnityEngine.Debug.Log("failed to move player model for reason " + ex.Message + "\nstack trace:\n" + ex.StackTrace);
 							}
 							if (component.ProxyColl != null)
 							{
@@ -1081,16 +1069,13 @@ stack trace:
 							this.serverDelayTime * 1000.0,
 							"ms, render delay ",
 							num,
-							"ms
-",
-							"Your internet connection is too slow, unable to properly process server data.
-",
+							"ms\n",
+							"Your internet connection is too slow, unable to properly process server data.\n",
 							"Render time ",
 							num2
 						});
 						Useful.UseMissionsMng.displayConnectionBox = true;
-						Useful.UseMissionsMng.connectionBoxContent = "Connection paused due to unstable internet.
-You can attempt to fix this by going to TFS Settings and setting Collision Warn Time to 8 seconds.";
+						Useful.UseMissionsMng.connectionBoxContent = "Connection paused due to unstable internet.\n\nYou can attempt to fix this by going to TFS Settings and setting Collision Warn Time to 8 seconds.";
 						double num8 = 0.0;
 						foreach (double num9 in this.bracketBuffer.Keys)
 						{
@@ -1123,23 +1108,15 @@ You can attempt to fix this by going to TFS Settings and setting Collision Warn 
 				}
 				catch (Exception ex2)
 				{
-					UnityEngine.Debug.Log("failed to move gameobject for reason: " + ex2.Message + "
-stack trace:
-" + ex2.StackTrace);
-					this.LastError = "failed to move gameobject for reason: " + ex2.Message + "
-stack trace:
-" + ex2.StackTrace;
+					UnityEngine.Debug.Log("failed to move gameobject for reason: " + ex2.Message + "\nstack trace:\n" + ex2.StackTrace);
+					this.LastError = "failed to move gameobject for reason: " + ex2.Message + "\nstack trace:\n" + ex2.StackTrace;
 				}
 			}
 		}
 		catch (Exception ex3)
 		{
-			UnityEngine.Debug.Log("failed to move gameobject for reason: " + ex3.Message + "
-stack trace:
-" + ex3.StackTrace);
-			this.LastError = "failed to move gameobject for reason: " + ex3.Message + "
-stack trace:
-" + ex3.StackTrace;
+			UnityEngine.Debug.Log("failed to move gameobject for reason: " + ex3.Message + "\nstack trace:\n" + ex3.StackTrace);
+			this.LastError = "failed to move gameobject for reason: " + ex3.Message + "\nstack trace:\n" + ex3.StackTrace;
 		}
 		UnityEngine.Debug.Log("resetting bounds. Why?");
 		try
@@ -1231,7 +1208,7 @@ stack trace:
 								float[] array2 = new float[4];
 								for (int l = 0; l <= 3; l++)
 								{
-									array2[l] = float.Parse(array[l].Replace(""", ""));
+									array2[l] = float.Parse(array[l].Replace("\"", ""));
 								}
 								UnityEngine.Debug.Log("detecting matillumocc");
 								MatIllumOcc component5 = keyValuePair2.Value.Second.GetComponent<MatIllumOcc>();
@@ -1248,9 +1225,7 @@ stack trace:
 		}
 		catch (Exception ex4)
 		{
-			UnityEngine.Debug.Log("failed to render state and engine for reason: " + ex4.Message + "
-stack trace:
-" + ex4.StackTrace);
+			UnityEngine.Debug.Log("failed to render state and engine for reason: " + ex4.Message + "\nstack trace:\n" + ex4.StackTrace);
 		}
 		UnityEngine.Debug.Log("trying to clean up old unneeded objects");
 		try
@@ -1264,9 +1239,7 @@ stack trace:
 		}
 		catch (Exception ex5)
 		{
-			UnityEngine.Debug.Log("failed to despawn unneeded obj for reason " + ex5.Message + "
-stack trace:
-" + ex5.StackTrace);
+			UnityEngine.Debug.Log("failed to despawn unneeded obj for reason " + ex5.Message + "\nstack trace:\n" + ex5.StackTrace);
 		}
 		UnityEngine.Debug.Log("processing pending plane creations");
 		foreach (KeyValuePair<string, JSONNode> keyValuePair3 in new Dictionary<string, JSONNode>(this.InProcessing))
@@ -1330,9 +1303,7 @@ stack trace:
 					}
 					catch (Exception ex6)
 					{
-						UnityEngine.Debug.Log("oh no something bad happened in component removal!
-" + ex6.Message + "
-" + ex6.StackTrace);
+						UnityEngine.Debug.Log("oh no something bad happened in component removal!\n" + ex6.Message + "\n" + ex6.StackTrace);
 					}
 					UnityEngine.Debug.Log("remarking " + keyValuePair3.Key);
 					MarkersDisplay useMarkDisplay = Useful.UseMarkDisplay;
@@ -1401,9 +1372,7 @@ stack trace:
 				}
 				catch (Exception ex8)
 				{
-					UnityEngine.Debug.Log("oh no something bad happened in spawning plane!
-" + ex8.Message + "
-" + ex8.StackTrace);
+					UnityEngine.Debug.Log("oh no something bad happened in spawning plane!\n" + ex8.Message + "\n" + ex8.StackTrace);
 				}
 				this.PlayersBeingRendered.Remove(keyValuePair3.Key);
 			}
@@ -1411,6 +1380,7 @@ stack trace:
 		double totalSeconds2 = this.stopwatch.Elapsed.TotalSeconds;
 		UnityEngine.Debug.Log("time taken to update: " + (totalSeconds2 - totalSeconds));
 	}
+
 	public Vector3 objectToVector(object vector)
 	{
 		if (vector is Vector3)
@@ -1419,14 +1389,17 @@ stack trace:
 		}
 		return Vector3.zero;
 	}
+
 	public float GetCurrentEpoch()
 	{
 		return this.TimeSinceLaunch;
 	}
+
 	public Vector3 normalizeRotationVector(Vector3 brokenVector)
 	{
 		return new Vector3(Mathf.Repeat(brokenVector.x, 360f), Mathf.Repeat(brokenVector.y, 360f), Mathf.Repeat(brokenVector.z, 360f));
 	}
+
 	private Vector3 LerpEulerAngle(Vector3 start, Vector3 end, float t)
 	{
 		for (int i = 0; i < 3; i++)
@@ -1450,6 +1423,7 @@ stack trace:
 		}
 		return Vector3.Lerp(start, end, t);
 	}
+
 	public DateTime GetNetworkTime()
 	{
 		DateTime result;
@@ -1476,16 +1450,16 @@ stack trace:
 		catch (Exception ex)
 		{
 			result = new DateTime(2004, 10, 2);
-			UnityEngine.Debug.Log("failed to retrieve date/time: " + ex.Message + "
-stack trace:
-" + ex.StackTrace);
+			UnityEngine.Debug.Log("failed to retrieve date/time: " + ex.Message + "\nstack trace:\n" + ex.StackTrace);
 		}
 		return result;
 	}
+
 	public uint SwapEndianness(ulong x)
 	{
 		return (uint)(((x & 255UL) << 24) + ((x & 65280UL) << 8) + ((x & 16711680UL) >> 8) + ((x & 18446744073692774400UL) >> 24));
 	}
+
 	public double getPreciseDelta()
 	{
 		if (!this.stopwatch.IsRunning)
@@ -1497,6 +1471,7 @@ stack trace:
 		this.lastStopWatchSpan = totalSeconds;
 		return Math.Abs(totalSeconds - num);
 	}
+
 	public void SendMessageToast(string message)
 	{
 		AndroidJavaClass androidJavaClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
@@ -1518,6 +1493,7 @@ stack trace:
 			});
 		}
 	}
+
 	public string NicelyRepresentBytes(int value, int decimalPlaces = 1)
 	{
 		string result;
@@ -1541,12 +1517,12 @@ stack trace:
 		}
 		catch (Exception ex)
 		{
-			UnityEngine.Debug.Log("nice fail " + ex.Message + "
-" + ex.StackTrace);
+			UnityEngine.Debug.Log("nice fail " + ex.Message + "\n" + ex.StackTrace);
 			result = "Unknown";
 		}
 		return result;
 	}
+
 	public int GetOutSpeed()
 	{
 		if (this.LastQueryOut < 1.0)
@@ -1563,6 +1539,7 @@ stack trace:
 		}
 		return this.OutSpeedRaw;
 	}
+
 	public int GetInSpeed()
 	{
 		if (this.LastQueryIn < 1.0)
@@ -1579,6 +1556,7 @@ stack trace:
 		}
 		return this.InSpeedRaw;
 	}
+
 	public string TFSMPNameToPrefabName(string TFSMPName)
 	{
 		if (TFSMPName == "InPerson")
@@ -1607,6 +1585,7 @@ stack trace:
 		}
 		return TFSMPName.Replace("InPerson", "Person");
 	}
+
 	public void ParseVoscript(string voscriptRaw)
 	{
 		string text = voscriptRaw.Trim(new char[]
@@ -1614,11 +1593,9 @@ stack trace:
 			'"'
 		});
 		UnityEngine.Debug.Log("parsing voscript: " + text);
-		foreach (string text2 in text.Replace("
-", "").Split(new char[]
+		foreach (string text2 in text.Replace("\r", "").Split(new char[]
 		{
-			'
-'
+			'\n'
 		}))
 		{
 			string text3 = text2.Split(new char[]
@@ -1640,6 +1617,7 @@ stack trace:
 			}
 		}
 	}
+
 	public Dictionary<string, object> JSONNodeToState(JSONNode state)
 	{
 		Dictionary<string, object> dictionary = new Dictionary<string, object>();
@@ -1649,59 +1627,111 @@ stack trace:
 		}
 		return dictionary;
 	}
+
 	public Vector3 broadcastPosition;
+
 	public string planeType;
+
 	public Socket socket;
+
 	public Vector3 broadcastRotation;
+
 	public string lastRenderData;
+
 	public Dictionary<string, JSONNode> InProcessing;
+
 	private MissionsManager missionsManager;
+
 	public Dictionary<string, Multiplayer.Pair<Mission.MsObj, GameObject>> RenderedPrefabs;
+
 	public string MyUsername;
+
 	public float lastRecvTime;
+
 	public float pingMS;
+
 	private bool SmoothMovementAllowed;
+
 	public List<GameObject> ToDespawn;
+
 	public JSONNode lastProcessedPositions;
+
 	public string lastProcessedTimestamp;
+
 	public Dictionary<string, int> PlayerMarkers;
+
 	public List<string> PlayersBeingRendered;
+
 	public string TargetServer;
+
 	public string LastError;
+
 	public Dictionary<string, List<object>> playerPositions = new Dictionary<string, List<object>>();
+
 	private float TimeSinceLaunch;
+
 	public string debugInfo;
+
 	private const string NtpServerAddress = "time.google.com";
+
 	public double lastServerTime;
+
 	public double serverDelayTime;
+
 	public Dictionary<double, JSONNode> bracketBuffer;
+
 	public double OldestBracket;
+
 	public double NewestBracket;
+
 	public Stopwatch stopwatch;
+
 	public double lastStopWatchSpan;
+
 	public int BytesOutOverTehInterwebz;
+
 	public int BytesInOverTehInterwebz;
+
 	public double LastQueryIn;
+
 	public double LastQueryOut;
+
 	public int BytesAsOfLastQueryIn;
+
 	public int BytesAsOfLastQueryOut;
+
 	public string[] SizeSuffixes;
+
 	public int OutSpeedRaw;
+
 	public int InSpeedRaw;
+
 	public string underreportedPacket;
+
 	public bool CollisionsEnabled;
+
 	public bool InPersonMode;
+
 	public GameObject debugcube;
+
 	public Dictionary<string, GameObject> PersonModels;
+
 	public string chatPendingSend;
+
 	public string lastServerChat;
+
 	public List<string> playersToBlock;
+
 	public Dictionary<string, object> currentState;
+
 	public Dictionary<string, Dictionary<string, object>> States;
+
 	public class Pair<T, U>
 	{
 		public T First { get; set; }
+
 		public U Second { get; set; }
+
 		public Pair(T first, U second)
 		{
 			this.First = first;
