@@ -1,0 +1,47 @@
+FilePath: str
+A global variable that represents where on the device your plugin is stored. This only contains the folder of your plugin, and not the main.py file.
+Example: "C:/Users/User/Documents/TFSMPServer/ServersidePlugins/Example/"
+
+PrimaryAPI.PlayerData: dict
+A dictionary that represents connected players. Note that only position, planeType and rotation is guaranteed.
+Format: [key] = [position, planeType, rotation, state, oldPosition, oldRotation, OldRcv, NewRcv]
+
+PrimaryAPI.Players: dict
+A dictionary that represents players and their socket connections as well as their APIPlayer type.
+Format: [key] = [address, Socket, APIPlayer]
+
+PrimaryAPI.PlayerConnected: Event
+An event that is fired whenever a new player joins.
+Parameters:
+	-player: An APIPlayer object representing the player.
+
+PrimaryAPI.PlayerDisconnected: Event
+An event that is fired whenever a player leaves.
+Parameters:
+	-player: An APIPlayer object formerly representing the player.
+
+PrimaryAPI.DataReceived: Event
+An event that is fired whenever new player data is received.
+Parameters:
+	-player: An APIPlayer object representing the player whose data was received.
+	-data: Player data as in PrimaryAPI.PlayerData.
+
+PrimaryAPI.APIPlayer.GetAPIPlayer(username:str) -> APIPlayer: function
+Gets the APIPlayer associated with the given username, or None if the username doesn't exist on the server.
+
+PrimaryAPI.APIPlayer.Username: str
+A str that represents the username of the APIPlayer.
+
+PrimaryAPI.APIPlayer.Connection: Socket
+The connection of the APIPlayer to the server. The socket may not be open.
+
+PrimaryAPI.APIPlayer.GetPlayerData() -> list: function
+Get a list of player data like in PrimaryAPI.PlayerData. Returns None if the player is no longer connected.
+
+PrimaryAPI.APIPlayer.IsConnected(precise:bool) -> bool: function
+Gets whether the APIPlayer is currently connected to the server. This function has two modes:
+precise=True: Returns whether the APIPlayer's socket connection is open.
+precise=False: Returns whether APIPlayer.GetPlayerData() returns a non-null value.
+
+PrimaryAPI.APIPlayer.Kick() -> void: function
+Forcibly disconnects the APIPlayer from the server. The APIPlayer may rejoin after this.

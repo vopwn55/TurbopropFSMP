@@ -1,0 +1,8 @@
+{
+    "PluginName":"AdminDashboard",
+    "PluginDescription":"Admin dashboard for your TFSMP server",
+    "PluginAuthor":"vopwn55",
+    "PluginVersion":"1.0",
+    
+    "MinimumTFSMPVersion":"0.1"
+}

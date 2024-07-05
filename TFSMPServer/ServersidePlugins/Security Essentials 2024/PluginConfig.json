@@ -1,0 +1,8 @@
+{
+    "PluginName":"Security Essentials 2024",
+    "PluginDescription":"Plugin that protects against common attacks and facilitates a ban interface",
+    "PluginAuthor":"vopwn55",
+    "PluginVersion":"1.0",
+    
+    "MinimumTFSMPVersion":"0.1"
+}

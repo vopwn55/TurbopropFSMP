@@ -1,0 +1,8 @@
+{
+    "PluginName":"Example Plugin",
+    "PluginDescription":"Example plugin showcasing API capabilities",
+    "PluginAuthor":"vopwn55",
+    "PluginVersion":"1.0",
+    
+    "MinimumTFSMPVersion":"0.1"
+}
