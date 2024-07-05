@@ -13,7 +13,7 @@ using SimpleJSON;
 using UnityEngine;
 public class Multiplayer
 {
-	public Multiplayer()
+	public void Initialize()
 	{
 		this.PlayerMarkers = new Dictionary<string, int>();
 		this.PlayersBeingRendered = new List<string>();
