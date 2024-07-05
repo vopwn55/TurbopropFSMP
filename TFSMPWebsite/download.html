@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turboprop FS Multiplayer</title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+    <meta property="og:title" content="Turboprop FS Multiplayer">
+    <meta property="og:description" content="Play Turboprop Flight Simulator with other players over the Internet">
+</head>
+<body style="background-image: url(background.jpg); background-size: 100% auto; background-size: cover;">
+    <image id="websitelogo" src="blocknet.png"></image>
+    <div id="topbar">
+        <a href="index.html" class="topbarlink">Home</a> |
+         <a href="download.html" class="topbarlink">Download</a> | 
+         <a href="servers.html" class="topbarlink">Servers</a> | 
+         <a href="troubleshoot.html" class="topbarlink">Help</a> | 
+         <a href="hosting.html" class="topbarlink">Documentation</a>
+    </div>
+    <div id="container">
+        
+        <div id="content">
+            <h1 style="margin-bottom:0; padding-bottom:0;">Download</h1>
+            <div id="countdown">
+                <h2 style="margin-top:0.7em;margin-bottom:0.7em;">Please wait...</h2>
+            </div>
+            <div id="finished">
+                <h2 style="margin-top:0.7em;">Player</h2>
+                <p>The Player is the mod that provides access to Turboprop Flight Simulator Multiplayer. Download and install it now to play with others over the Internet!</p>
+                <a href="https://vopwn55.xyz/tfsmp/tfsmp-1.1-rtm.apk"><button type="button" class="primary-button" style="width:15em;">Download Player</button></a>
+                <a href="troubleshoot.html"><button type="button" class="secondary-button" style="width:11em;">Info & Troubleshoot</button></a>
+                <div class="section section-info">
+                    <svg class="areaicon infoicon" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="InfoIcon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m1 15h-2v-6h2zm0-8h-2V7h2z"></path></svg>
+                    <p class="infotext">The player is only supported on Android 4.4 and above.</p>
+                </div>
+                <h2 style="margin-top:0.7em;">Server</h2>
+                <p>The server software allows you to host your own TFSMP servers for people to connect to. You can customize your server by changing its settings and installing new plugins.</p>
+                <a href="https://vopwn55.xyz/tfsmp/TFSMPServerPublic.zip"><button type="button" class="primary-button" style="width:15em;">Download Server v1.0</button></a>
+                <a href="troubleshoot.html"><button type="button" class="secondary-button" style="width:11em;">Info & Troubleshoot</button></a>
+                <div class="section section-info">
+                    <svg class="areaicon infoicon" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="InfoIcon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m1 15h-2v-6h2zm0-8h-2V7h2z"></path></svg>
+                    <p class="infotext">The server requires Python 3.10 installed on your device to work.</p>
+                </div>
+                <div class="section section-tip">
+                    <svg class="areaicon" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="TipIcon"><path d="M9 21c0 .5.4 1 1 1h4c.6 0 1-.5 1-1v-1H9zm3-19C8.1 2 5 5.1 5 9c0 2.4 1.2 4.5 3 5.7V17c0 .5.4 1 1 1h6c.6 0 1-.5 1-1v-2.3c1.8-1.3 3-3.4 3-5.7 0-3.9-3.1-7-7-7"></path></svg>
+                    <p>Read our <a href="hosting.html">server guide</a> - it's a comprehensive guide for setting up your server.</p>
+                </div>
+            </div>
+            <script>
+                function updateCountdown() {
+                    var target = new Date("2024-04-28T07:00:00Z"); // April 28th, 2024, 8 AM UTC
+                    var now = new Date();
+                    var difference = target - now;
+
+                    var days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                    var hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                    var countdownStr = days + " days " + hours + " hours " + minutes + " minutes " + seconds + " seconds";
+
+                    var countdownDiv = document.getElementById("countdown");
+                    var finishedDiv = document.getElementById("finished");
+
+                    if (difference <= 0) {
+                        countdownDiv.style.display = "none"; // Hide countdown
+                        finishedDiv.style.display = "block"; // Show finished div
+                    } else {
+                        countdownDiv.innerHTML = "<h2 style=\"margin-top:0.7em;margin-bottom:0.7em;\">TFSMP will release in<br>" + countdownStr + "</h2>";
+                        countdownDiv.style.display = "block"; // Show countdown
+                        finishedDiv.style.display = "none"; // Hide finished div
+                    }
+                }
+                updateCountdown();
+                setInterval(updateCountdown, 1000);
+            </script>
+        </div>
+    </div>
+</body>
+</html>

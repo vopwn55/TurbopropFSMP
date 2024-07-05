@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turboprop FS Multiplayer</title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+    <meta property="og:title" content="Turboprop FS Multiplayer">
+    <meta property="og:description" content="Play Turboprop Flight Simulator with other players over the Internet">
+</head>
+<body style="background-image: url(background.jpg); background-size: 100% auto; background-size: cover;">
+    <image id="websitelogo" src="blocknet.png"></image>
+    <div id="topbar">
+        <a href="index.html" class="topbarlink">Home</a> |
+         <a href="download.html" class="topbarlink">Download</a> | 
+         <a href="servers.html" class="topbarlink">Servers</a> | 
+         <a href="troubleshoot.html" class="topbarlink">Help</a> | 
+         <a href="hosting.html" class="topbarlink">Documentation</a>
+    </div>
+    <div id="container">
+        
+        <div id="content">
+            <h1>Server Hosting Guide</h1>
+            <p>This page will give you a headstart on setting up your TFSMP server!</p>
+            <div class="section section-info">
+                <svg class="areaicon infoicon" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="InfoIcon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m1 15h-2v-6h2zm0-8h-2V7h2z"></path></svg>
+                <p class="infotext">Download the server from the <a href="download.html" style="color:white">downloads page</a>.</p>
+            </div>
+            <h2 style="margin-top:0.1em; margin-bottom: 0.5em;"><a href="#prerequisites" style="color:black; text-decoration: none; font-size: 110%;">Prerequisites</a></h2>
+            <p>In order for the TFSMP server to work, you'll need:</p>
+            <ul>
+                <li><b>Basic computer literacy and an understanding of networks</b></li>
+                <li>A Windows or Linux-based system</li>
+                <li>Python 3.10.0 or higher</li>
+                <li>Pip3</li>
+            </ul>
+            <p>If you plan on making the server public, you might need an external IP or a hosting service that provides one. The TFSMP server doesn't work well with proxies.</p>
+            <h2 style="margin-top:0.1em; margin-bottom: 0.5em;"><a href="#installation" style="color:black; text-decoration: none; font-size: 110%;">Installation</a></h2>
+            <p>
+                Download the server in case you haven't done that yet. 
+                The server will be located in a .zip file, which you need to extract. 
+                The extraction location does not matter but ensure that you have sufficient permissions to access files in it. 
+                For Windows, it's recommended to place the server in your Documents folder. 
+                For Linux, it's recommended to place it in your home folder.
+                <br><br>
+                Once the server is extracted, execute the AutoSetup.py script in it.
+                The script will check for updates and install necessary modules, and ask you to set up basic settings.
+                You may either complete the setup wizard or skip it.
+                The TFSMP settings are contained in a file called config.json, you may edit the file to change settings.
+                It's recommended to keep the default settings, unless you know what you're doing.
+            </p>
+            <h2 style="margin-top:0.1em; margin-bottom: 0.5em;"><a href="#running" style="color:black; text-decoration: none; font-size: 110%;">Running</a></h2>
+            <p>
+                In order to launch the TFSMP server, you need to run the Server.py file in the server folder.
+                On Windows, there is a shortcut included (Start the TFSMP Server.lnk) that you can use to conveniently launch the server.
+                If you see "Server running on (your address)", then the server is working correctly and is ready to receive connections!
+            </p>
+            <h2 style="margin-top:0.1em; margin-bottom: 0.5em;"><a href="#running" style="color:black; text-decoration: none; font-size: 110%;">Plugins</a></h2>
+            <p>
+                Plugins can extend the functionality of your TFSMP server.
+                Plugins are divided into two variants: server-side plugins and client-side plugins.
+                The names explain everything: server-side plugins run on your server, whereas client-side plugins run on the connected clients.
+                Server-side plugins are written in Python and client-side plugins are written in Voscript.
+                By default, there is one server-side plugin included: Security Essentials 2024.
+                You can install extra plugins or write your own.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
