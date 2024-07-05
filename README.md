@@ -1,5 +1,5 @@
 # TurbopropFSMP
-This is a read-only repository containing the source code of the former Turboprop FS Multiplayer mod, published for educational purposes. You are free to use the code as you wish, however I strictly recommend against using it in production as it is severly flawed. This mod is discontinued, so please do not suggest fixes or new features.
+This is a read-only repository containing the source code of the former Turboprop FS Multiplayer mod, published for educational purposes. You are free to use the code as you wish, however I strictly recommend against using it in production as it is severly flawed. This mod is discontinued, so please do not suggest fixes or new features (unless something in this repository is missing that's required for proper usage)
 
 # Included
 <ul>
